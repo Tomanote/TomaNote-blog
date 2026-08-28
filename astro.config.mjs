@@ -1,11 +1,14 @@
 // @ts-check
 import { defineConfig } from "astro/config";
 import tailwindcss from "@tailwindcss/vite";
+import sitemap from "@astrojs/sitemap";
 
 const SITE_URL = "https://blog.tomanote.app";
 
 export default defineConfig({
   site: SITE_URL,
+
+  integrations: [sitemap()],
 
   i18n: {
     defaultLocale: "en",
