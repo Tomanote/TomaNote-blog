@@ -45,7 +45,6 @@ jobs:
           cp public/rss-styles.xsl dist/rss-styles.xsl
           cp public/favicon.ico dist/favicon.ico
           cp public/icon-*.png dist/
-          cp public/icon-svg.svg dist/
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
