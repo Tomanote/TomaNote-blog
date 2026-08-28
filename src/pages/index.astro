@@ -1,0 +1,22 @@
+---
+// index.astro — EN blog home page
+import { getCollection } from "astro:content";
+import BlogLayout from "../layouts/BlogLayout.astro";
+import BlogHome from "../components/BlogHome.astro";
+
+const locale = "en";
+const allPosts = await getCollection("blog");
+const posts = allPosts
+  .filter(({ id, data }) => !data.draft && id.startsWith(`${locale}/`))
+  .sort((a, b) => b.data.publishDate.getTime() - a.data.publishDate.getTime());
+
+const siteUrl = "https://blog.tomanote.app";
+---
+
+<BlogLayout
+  title="Home"
+  description="Articles, changelogs, privacy-first insights, and minimalist productivity tips."
+  canonical={`${siteUrl}/`}
+>
+  <BlogHome locale={locale} posts={posts} />
+</BlogLayout>
