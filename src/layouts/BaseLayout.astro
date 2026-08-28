@@ -1,0 +1,262 @@
+---
+// BaseLayout.astro — Root layout with full SEO, i18n, PWA, JSON-LD
+import "../styles/global.css";
+
+interface Props {
+  title: string;
+  description: string;
+  canonical?: string;
+  ogImage?: string;
+  ogType?: "website" | "article";
+  article?: {
+    publishedTime?: string;
+    modifiedTime?: string;
+    authors?: string[];
+    tags?: string[];
+  };
+  noIndex?: boolean;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogImage = "/og-image.png",
+  ogType = "website",
+  article,
+  noIndex = false,
+} = Astro.props;
+
+const locale = Astro.currentLocale || "en";
+const isSpanish = locale === "es";
+const siteUrl = "https://blog.tomanote.app";
+const canonicalUrl = canonical || `${siteUrl}${Astro.url.pathname}`;
+const ogLocale = isSpanish ? "es_ES" : "en_US";
+const ogImageUrl = `${siteUrl}${ogImage}`;
+const authorName = "Camiicode";
+const authorUrl = "https://github.com/camiicode";
+const twitterHandle = "@camiicode_x";
+
+const pageTitle = `${title} | TomaNote Blog`;
+const metaDescription = description;
+const metaKeywords = isSpanish
+  ? "notas, bloc de notas, productividad, minimalista, consejos, TomaNote, app, pwa, offline"
+  : "notes, notepad, productivity, minimalist, tips, TomaNote, app, pwa, offline";
+---
+
+<!doctype html>
+<html lang={locale} data-theme="dark">
+  <head>
+    <script is:inline>
+      (function () {
+        try {
+          const saved = localStorage.getItem("blogTheme");
+          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          const theme = saved || (prefersDark ? "dark" : "light");
+          document.documentElement.setAttribute("data-theme", theme);
+      } catch {
+        document.documentElement.setAttribute("data-theme", "dark");
+      }
+        const lang = navigator.language?.toLowerCase().startsWith("es") ? "es" : "en";
+        document.documentElement.setAttribute("data-lang", lang);
+      })();
+    </script>
+
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+
+    {/* === BASIC SEO === */}
+    <title>{pageTitle}</title>
+    <meta name="description" content={metaDescription} />
+    <meta name="author" content={authorName} />
+    <meta name="keywords" content={metaKeywords} />
+
+    {/* === CANONICAL & ROBOTS === */}
+    <link rel="canonical" href={canonicalUrl} />
+    <meta name="robots" content={noIndex ? "noindex, nofollow" : "index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1"} />
+    <link rel="alternate" hreflang="en" href={`${siteUrl}${Astro.url.pathname}`} />
+    <link rel="alternate" hreflang="es" href={`${siteUrl}/es${Astro.url.pathname}`} />
+    <link rel="alternate" hreflang="x-default" href={`${siteUrl}${Astro.url.pathname}`} />
+
+    {/* === OPEN GRAPH / FACEBOOK === */}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:url" content={canonicalUrl} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={title} />
+    <meta property="og:locale" content={ogLocale} />
+    <meta property="og:locale:alternate" content={isSpanish ? "en_US" : "es_ES"} />
+    <meta property="og:site_name" content="TomaNote Blog" />
+
+    {ogType === "article" && article && (
+      <>
+        {article.publishedTime && <meta property="article:published_time" content={article.publishedTime} />}
+        {article.modifiedTime && <meta property="article:modified_time" content={article.modifiedTime} />}
+        {article.authors && article.authors.forEach(() => (
+          <meta property="article:author" content={authorUrl} />
+        ))}
+        {article.tags && article.tags.forEach(tag => (
+          <meta property="article:tag" content={tag} />
+        ))}
+      </>
+    )}
+
+    {/* === TWITTER CARDS === */}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:url" content={canonicalUrl} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:width" content="1200" />
+    <meta name="twitter:image:height" content="630" />
+    <meta name="twitter:image:alt" content={title} />
+    <meta name="twitter:creator" content={twitterHandle} />
+    <meta name="twitter:site" content={twitterHandle} />
+
+    {/* === APP / PWA TAGS === */}
+    <meta name="apple-mobile-web-app-title" content="TomaNote Blog" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="theme-color" content="#1a1a1a" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#E0D3C2" media="(prefers-color-scheme: light)" />
+    <meta name="color-scheme" content="dark light" />
+
+    {/* === FONTS === */}
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+    {/* === FAVICON & ICONS === */}
+    <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="192x192" href="/icon-192.png" />
+    <link rel="icon" type="image/svg+xml" href="/icon-svg.svg" />
+
+    {/* === PWA MANIFEST === */}
+    <link rel="manifest" href="/manifest.webmanifest" />
+
+    {/* === SCHEMA.ORG: WebSite === */}
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "TomaNote Blog",
+      "url": siteUrl,
+      "description": "Official blog for TomaNote — articles, changelogs, privacy-first insights, and minimalist productivity tips.",
+      "publisher": {
+        "@type": "Organization",
+        "name": "TomaNote",
+        "url": siteUrl,
+        "logo": {
+          "@type": "ImageObject",
+          "url": `${siteUrl}/icon-512.png`,
+          "width": 512,
+          "height": 512
+        },
+        "sameAs": [
+          "https://github.com/Tomanote/TomaNote",
+          "https://twitter.com/camiicode_x"
+        ]
+      },
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": `${siteUrl}/search?q={search_term_string}`
+        },
+        "query-input": "required name=search_term_string"
+      }
+    }, null, 2)} />
+
+    {/* === SCHEMA.ORG: Organization === */}
+    <script is:inline type="application/ld+json" set:html={JSON.stringify({
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "TomaNote",
+      "url": siteUrl,
+      "description": "Minimal notepad for people who just want to write. Fast, offline-first, and completely free.",
+      "sameAs": ["https://twitter.com/camiicode_x", "https://github.com/camiicode"],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "email": "hello@tomanote.app",
+        "contactType": "customer service",
+        "availableLanguage": ["English", "Spanish"]
+      }
+    }, null, 2)} />
+
+    {/* === SCHEMA.ORG: Blog (BlogPosting for articles) === */}
+    {ogType === "article" && article && (
+      <script is:inline type="application/ld+json" set:html={JSON.stringify({
+        "@context": "https://schema.org",
+        "@type": "BlogPosting",
+        "headline": title,
+        "description": description,
+        "image": ogImageUrl,
+        "url": canonicalUrl,
+        "datePublished": article.publishedTime,
+        "dateModified": article.modifiedTime || article.publishedTime,
+        "author": {
+          "@type": "Person",
+          "name": authorName,
+          "url": authorUrl
+        },
+        "publisher": {
+          "@type": "Organization",
+          "name": "TomaNote Blog",
+          "url": siteUrl,
+          "logo": {
+            "@type": "ImageObject",
+            "url": `${siteUrl}/icon-512.png`,
+            "width": 512,
+            "height": 512
+          }
+        },
+        "keywords": article.tags?.join(", ") || metaKeywords,
+        "articleSection": "blog",
+        "inLanguage": locale
+      }, null, 2)} />
+    )}
+
+    {/* === RSS FEED === */}
+    <link rel="alternate" type="application/rss+xml" title="TomaNote Blog RSS" href={`${siteUrl}/rss.xml`} />
+  </head>
+
+  <body class="site-body">
+    <a href="#main-content" class="skip-link">Skip to content</a>
+    <slot name="header" />
+    <main id="main-content" role="main">
+      <slot />
+    </main>
+    <slot name="footer" />
+  </body>
+</html>
+
+<style>
+  .site-body {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .skip-link {
+    position: absolute;
+    top: -100%;
+    left: 1rem;
+    z-index: 9999;
+    padding: 0.5rem 1rem;
+    background: var(--tn-color-background);
+    color: var(--tn-color-text);
+    font-size: 0.875rem;
+    border: 1px solid var(--tn-color-accent);
+    border-radius: 0 0 6px 6px;
+    text-decoration: none;
+    transition: top 0.15s ease;
+  }
+
+  .skip-link:focus {
+    top: 0;
+  }
+</style>

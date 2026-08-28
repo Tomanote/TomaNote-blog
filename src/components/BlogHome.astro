@@ -1,0 +1,241 @@
+---
+// BlogHome.astro — Shared blog home page content (post grid)
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  locale: string;
+  posts: CollectionEntry<"blog">[];
+}
+
+const { locale, posts: rawPosts } = Astro.props;
+const isSpanish = locale === "es";
+
+// Sort by date (newest first) and split into hero + grid
+const posts = [...rawPosts].sort(
+  (a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime()
+);
+const [heroPost, ...gridPosts] = posts;
+
+function getPostUrl(postId: string): string {
+  const [postLocale, ...slugParts] = postId.split("/");
+  const slug = slugParts.join("/");
+  return postLocale === "en" ? `/blog/${slug}/` : `/blog/${postLocale}/${slug}/`;
+}
+
+const t = {
+  title: isSpanish ? "Blog de TomaNote" : "TomaNote Blog",
+  description: isSpanish
+    ? "Artículos, changelogs, insights de privacidad y consejos de productividad minimalista."
+    : "Articles, changelogs, privacy-first insights, and minimalist productivity tips.",
+  latest: isSpanish ? "Últimos artículos" : "Latest Articles",
+  readMore: isSpanish ? "Leer más" : "Read more",
+  updatedOn: isSpanish ? "Actualizado el" : "Updated on",
+  by: isSpanish ? "por " : "by",
+  tags: isSpanish ? "Etiquetas" : "Tags",
+  noPosts: isSpanish ? "No hay artículos todavía." : "No articles yet.",
+  featured: isSpanish ? "Destacado" : "Featured",
+};
+---
+
+<div class="page-container">
+  <header class="page-header">
+    <h1 class="page-title">{t.title}</h1>
+    <p class="page-subtitle">{t.description}</p>
+  </header>
+
+  {posts.length > 0 && (
+    <section class="posts-section" aria-labelledby="posts-heading">
+      <h2 id="posts-heading" class="section-title">{t.latest}</h2>
+
+      {heroPost && (() => {
+        const postUrl = getPostUrl(heroPost.id);
+        const ogImage = heroPost.data.ogImage || "/og-image.png";
+        return (
+          <article class="post-card hero-card flex! flex-row!" data-featured={heroPost.data.featured}>
+            <a href={postUrl} class="post-card-image-link w-[50%]" aria-label={heroPost.data.title}>
+              <img src={ogImage} alt={heroPost.data.title} class="post-card-image" loading="eager" width="1200" height="630" />
+              <span class="post-card-image-overlay">
+                {t.readMore}
+                <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </span>
+            </a>
+            <div class="post-card-body w-[50%]">
+              <header class="post-card-header">
+                {heroPost.data.featured && (<span class="featured-badge">{t.featured}</span>)}
+                <time class="post-date" datetime={heroPost.data.publishDate.toISOString()}>
+                  {heroPost.data.publishDate.toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric" })}
+                </time>
+              </header>
+              <h2 class="post-card-title"><a href={postUrl}>{heroPost.data.title}</a></h2>
+              <p class="post-card-excerpt">{heroPost.data.description}</p>
+              <footer class="post-card-footer">
+                <div class="post-meta">
+                  <span class="post-author">
+                    {t.by}&nbsp;<strong>{heroPost.data.author}</strong>
+                  </span>
+                </div>
+                {heroPost.data.tags.length > 0 && (
+                  <div class="post-tags" aria-label={t.tags}>
+                    {heroPost.data.tags.slice(0, 4).map((tag) => (<span class="tag">{tag}</span>))}
+                    {heroPost.data.tags.length > 4 && (<span class="tag-more">+{heroPost.data.tags.length - 4}</span>)}
+                  </div>
+                )}
+                <a href={postUrl} class="read-more-link">
+                  {t.readMore}
+                  <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                    <polyline points="12 5 19 12 12 19"></polyline>
+                  </svg>
+                </a>
+              </footer>
+            </div>
+          </article>
+        );
+      })()}
+
+      {gridPosts.length > 0 && (
+        <div class="posts-grid">
+          {gridPosts.map((post) => {
+            const postUrl = getPostUrl(post.id);
+            const ogImage = post.data.ogImage || "/og-image.png";
+            return (
+              <article class="post-card" data-featured={post.data.featured}>
+                <a href={postUrl} class="post-card-image-link" aria-label={post.data.title}>
+                  <img src={ogImage} alt={post.data.title} class="post-card-image" loading="lazy" width="600" height="315" />
+                  <span class="post-card-image-overlay">
+                    {t.readMore}
+                    <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                      <line x1="5" y1="12" x2="19" y2="12"></line>
+                      <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                  </span>
+                </a>
+                <div class="post-card-body">
+                  <header class="post-card-header">
+                    {post.data.featured && (<span class="featured-badge">{t.featured}</span>)}
+                    <time class="post-date" datetime={post.data.publishDate.toISOString()}>
+                      {post.data.publishDate.toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric" })}
+                    </time>
+                  </header>
+                  <h2 class="post-card-title"><a href={postUrl}>{post.data.title}</a></h2>
+                  <p class="post-card-excerpt">{post.data.description}</p>
+                  <footer class="post-card-footer">
+                    <div class="post-meta">
+                      <span class="post-author">
+                        {t.by}&nbsp;<strong>{post.data.author}</strong>
+                      </span>
+                    </div>
+                    {post.data.tags.length > 0 && (
+                      <div class="post-tags" aria-label={t.tags}>
+                        {post.data.tags.slice(0, 3).map((tag) => (<span class="tag">{tag}</span>))}
+                        {post.data.tags.length > 3 && (<span class="tag-more">+{post.data.tags.length - 3}</span>)}
+                      </div>
+                    )}
+                    <a href={postUrl} class="read-more-link">
+                      {t.readMore}
+                      <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                      </svg>
+                    </a>
+                  </footer>
+                </div>
+              </article>
+            );
+          })}
+        </div>
+      )}
+    </section>
+  )}
+
+  {posts.length === 0 && (
+    <section class="empty-state" aria-labelledby="empty-heading">
+      <h2 id="empty-heading">{t.noPosts}</h2>
+      <p>{isSpanish ? "Vuelve pronto para leer los primeros artículos." : "Check back soon for the first articles."}</p>
+    </section>
+  )}
+</div>
+
+<style>
+  .page-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    flex: 1;
+    width: 100%;
+  }
+
+  .page-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding-bottom: 2rem;
+    border-bottom: 1px solid var(--tn-color-accent);
+  }
+
+  .page-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    color: var(--tn-color-text);
+    letter-spacing: -0.02em;
+  }
+
+  .page-subtitle {
+    font-size: 1.125rem;
+    opacity: 0.7;
+    max-width: 600px;
+    margin: 0 auto;
+    line-height: 1.6;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    color: var(--tn-color-text);
+  }
+
+  .hero-card { display: grid; grid-template-columns: 1fr 1fr; margin-bottom: 2.5rem; align-items: stretch; border: 1px solid var(--tn-color-accent); border-radius: var(--tn-border-radius); overflow: hidden; background: var(--tn-color-secondary-background); }
+  .hero-card .post-card-image-link { aspect-ratio: auto; min-height: 280px; }
+  .hero-card .post-card-image { height: 100%; min-height: 280px; }
+  .hero-card .post-card-body { padding: 2rem; justify-content: center; }
+  .hero-card .post-card-title { font-size: 1.75rem; }
+  .hero-card .post-card-excerpt { font-size: 1rem; line-height: 1.7; }
+
+  .posts-grid { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+  @media (min-width: 640px) { .posts-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .posts-grid { grid-template-columns: repeat(3, 1fr); } }
+
+  .post-card { display: flex; flex-direction: column; background: var(--tn-color-secondary-background); border: 1px solid var(--tn-color-accent); border-radius: var(--tn-border-radius); overflow: hidden; transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease; }
+  .post-card:hover { transform: translateY(-4px); border-color: var(--tn-color-contrast); box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15); }
+  .post-card[data-featured="true"] { border-color: var(--tn-color-contrast); }
+  .post-card-image-link { position: relative; display: block; overflow: hidden; aspect-ratio: 1200 / 630; background: var(--tn-color-accent); }
+  .post-card-image { width: 100%; height: 100%; object-fit: cover; transition: transform 0.3s ease; }
+  .post-card:hover .post-card-image { transform: scale(1.05); }
+  .post-card-image-overlay { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; gap: 0.5rem; background: rgba(0, 0, 0, 0.5); color: #fff; font-size: 0.9rem; font-weight: 600; opacity: 0; transition: opacity 0.3s ease; }
+  .post-card:hover .post-card-image-overlay { opacity: 1; }
+  .post-card-body { display: flex; flex-direction: column; flex: 1; padding: 1.5rem; }
+  .post-card-header { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.75rem; margin-bottom: 0.75rem; }
+  .featured-badge { font-size: 0.7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; padding: 0.2rem 0.5rem; background: var(--tn-color-accent); color: var(--tn-color-background); border-radius: var(--tn-border-radius-small); }
+  .post-date { font-size: 0.8rem; opacity: 0.6; color: var(--tn-color-text); }
+  .post-card-title { font-size: 1.25rem; font-weight: 600; margin: 0 0 0.75rem; line-height: 1.3; }
+  .post-card-title a { color: var(--tn-color-text); text-decoration: none; transition: color 0.2s ease; }
+  .post-card-title a:hover { color: var(--tn-color-accent); }
+  .post-card-excerpt { font-size: 0.9rem; line-height: 1.6; opacity: 0.8; margin-bottom: 1rem; flex: 1; }
+  .post-card-footer { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; padding-top: 1rem; border-top: 1px solid var(--tn-color-accent); }
+  .post-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 1rem; font-size: 0.8rem; opacity: 0.7; }
+  .post-author { font-weight: 500; }
+  .post-tags { display: flex; flex-wrap: wrap; gap: 0.35rem; }
+  .tag { font-size: 0.7rem; font-weight: 500; padding: 0.2rem 0.5rem; background: var(--tn-color-background); color: var(--tn-color-accent); border: 1px solid var(--tn-color-accent); border-radius: var(--tn-border-radius-small); text-transform: lowercase; }
+  .tag-more { font-size: 0.7rem; opacity: 0.6; padding: 0.2rem 0.5rem; }
+  .read-more-link { display: inline-flex; align-items: center; gap: 0.35rem; font-size: 0.875rem; font-weight: 600; color: var(--tn-color-accent); text-decoration: none; transition: opacity 0.2s ease, gap 0.2s ease; }
+  .read-more-link:hover { opacity: 0.8; gap: 0.5rem; }
+  .empty-state { text-align: center; padding: 4rem 2rem; background: var(--tn-color-secondary-background); border: 1px solid var(--tn-color-accent); border-radius: var(--tn-border-radius); }
+  .empty-state h2 { margin-bottom: 0.75rem; color: var(--tn-color-text); }
+  .empty-state p { opacity: 0.7; margin: 0; }
+  @media (max-width: 768px) { .hero-card { grid-template-columns: 1fr; } .hero-card .post-card-image-link { aspect-ratio: 1200 / 630; min-height: auto; } .hero-card .post-card-image { min-height: auto; } }
+  @media (max-width: 480px) { .page-container { padding: 1.5rem 1rem; } .post-card { padding: 1.25rem; } .post-card-footer { flex-direction: column; align-items: flex-start; } .hero-card .post-card-body { padding: 1.5rem; } .hero-card .post-card-title { font-size: 1.375rem; } }
+</style>

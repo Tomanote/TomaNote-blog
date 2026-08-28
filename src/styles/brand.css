@@ -1,0 +1,155 @@
+/* ===========================================
+   TomaNote Blog — Design Tokens
+   Adapted from TomaNote App (src/styles/abstracts/Variables.scss)
+   =========================================== */
+
+/* === Neutral (always available) === */
+:root {
+  --tn-neutral-primary-color: #000000;
+  --tn-neutral-secondary-color: #C2C2C2;
+  --tn-neutral-tertiary-color: #FFFFFF;
+  --tn-neutral-link-color: #276FBF;
+
+  /* === Base Font & Sizing === */
+  --tn-font-size-base: 1rem;
+  --tn-font-size-medium: 1.25rem;
+  --tn-font-size-large: 1.6rem;
+  --tn-font-family-default: "Inter", var(--sl-font-system), system-ui, sans-serif;
+  --tn-padding-base: 10px;
+  --tn-border-radius: 5px;
+  --tn-border-radius-small: 4px;
+
+  /* === Scrollbar (dark default) === */
+  --tn-scrollbar-thumb: #676767;
+  --tn-scrollbar-track: #2d2d2d;
+}
+
+/* === Theme Variables === */
+
+/* --- Dark (default) --- */
+:root {
+  --tn-theme-primary: #181A1B;
+  --tn-theme-secondary: #272E38;
+  --tn-theme-accent: #465461;
+  --tn-theme-contrast: #335484;
+  --tn-color-text: var(--tn-neutral-tertiary-color);
+
+  /* High-level semantic aliases */
+  --tn-color-background: var(--tn-theme-primary);
+  --tn-color-secondary-background: var(--tn-theme-secondary);
+  --tn-color-accent: var(--tn-theme-accent);
+  --tn-color-contrast: var(--tn-theme-contrast);
+  --tn-color-link: var(--tn-neutral-link-color);
+
+  /* Scrollbar */
+  --tn-scrollbar-thumb: var(--tn-theme-primary);
+  --tn-scrollbar-track: var(--tn-theme-secondary);
+}
+
+/* --- Light --- */
+:root[data-theme="light"] {
+  --tn-theme-primary: #E0D3C2;
+  --tn-theme-secondary: #F1EBE4;
+  --tn-theme-accent: #FF893B;
+  --tn-theme-contrast: #CFA37E;
+  --tn-color-text: var(--tn-neutral-primary-color);
+
+  --tn-color-background: var(--tn-theme-primary);
+  --tn-color-secondary-background: var(--tn-theme-secondary);
+  --tn-color-accent: var(--tn-theme-accent);
+  --tn-color-contrast: var(--tn-theme-contrast);
+  --tn-color-link: var(--tn-neutral-link-color);
+
+  --tn-scrollbar-thumb: #b0b0b0;
+  --tn-scrollbar-track: #f0f0f0;
+}
+
+/* --- Cozy Rose --- */
+:root[data-theme="cozy-rose"] {
+  --tn-theme-primary: #8B5FBF;
+  --tn-theme-secondary: #E9E3F5;
+  --tn-theme-accent: #BFA2DB;
+  --tn-theme-contrast: #5E3A87;
+  --tn-color-text: var(--tn-neutral-tertiary-color);
+
+  --tn-color-background: var(--tn-theme-primary);
+  --tn-color-secondary-background: var(--tn-theme-secondary);
+  --tn-color-accent: var(--tn-theme-accent);
+  --tn-color-contrast: var(--tn-theme-contrast);
+  --tn-color-link: var(--tn-neutral-link-color);
+
+  --tn-scrollbar-thumb: #b0b0b0;
+  --tn-scrollbar-track: #f0f0f0;
+}
+
+/* --- Chill Aqua --- */
+:root[data-theme="chill-aqua"] {
+  --tn-theme-primary: #76C9D4;
+  --tn-theme-secondary: #E1F7F9;
+  --tn-theme-accent: #77C8BF;
+  --tn-theme-contrast: #1F5869;
+  --tn-color-text: var(--tn-neutral-primary-color);
+
+  --tn-color-background: var(--tn-theme-primary);
+  --tn-color-secondary-background: var(--tn-theme-secondary);
+  --tn-color-accent: var(--tn-theme-accent);
+  --tn-color-contrast: var(--tn-theme-contrast);
+  --tn-color-link: var(--tn-neutral-link-color);
+
+  --tn-scrollbar-thumb: #b0b0b0;
+  --tn-scrollbar-track: #f0f0f0;
+}
+
+/* --- Wild Forest --- */
+:root[data-theme="wild-forest"] {
+  --tn-theme-primary: #8EBF7A;
+  --tn-theme-secondary: #C6DDBF;
+  --tn-theme-accent: #3E6B3F;
+  --tn-theme-contrast: #674A40;
+  --tn-color-text: var(--tn-neutral-primary-color);
+
+  --tn-color-background: var(--tn-theme-primary);
+  --tn-color-secondary-background: var(--tn-theme-secondary);
+  --tn-color-accent: var(--tn-theme-accent);
+  --tn-color-contrast: var(--tn-theme-contrast);
+  --tn-color-link: var(--tn-neutral-link-color);
+
+  --tn-scrollbar-thumb: #b0b0b0;
+  --tn-scrollbar-track: #f0f0f0;
+}
+
+/* --- Neon Orbit --- */
+:root[data-theme="neon-orbit"] {
+  --tn-theme-primary: #1A1A2E;
+  --tn-theme-secondary: #1F3365;
+  --tn-theme-accent: #EB5B72;
+  --tn-theme-contrast: #971C3C;
+  --tn-color-text: var(--tn-neutral-tertiary-color);
+
+  --tn-color-background: var(--tn-theme-primary);
+  --tn-color-secondary-background: var(--tn-theme-secondary);
+  --tn-color-accent: var(--tn-theme-accent);
+  --tn-color-contrast: var(--tn-theme-contrast);
+  --tn-color-link: var(--tn-neutral-link-color);
+
+  --tn-scrollbar-thumb: var(--tn-theme-primary);
+  --tn-scrollbar-track: var(--tn-theme-secondary);
+}
+
+/* === Compatibility (legacy) === */
+:root {
+  --color-background: var(--tn-color-background);
+  --color-secondary-background: var(--tn-color-secondary-background);
+  --color-accent: var(--tn-color-accent);
+  --color-contrast: var(--tn-color-contrast);
+  --color-text: var(--tn-color-text);
+  --font-family-default: var(--tn-font-family-default);
+}
+
+/* === Utility classes for forced themes (testing) === */
+.tn-theme-dark    { --tn-theme-primary: #181A1B; --tn-theme-secondary: #272E38; --tn-theme-accent: #465461; --tn-theme-contrast: #335484; --tn-color-text: #FFF; }
+.tn-theme-light   { --tn-theme-primary: #E0D3C2; --tn-theme-secondary: #F1EBE4; --tn-theme-accent: #FF893B; --tn-theme-contrast: #CFA37E; --tn-color-text: #000; }
+.tn-theme-rose    { --tn-theme-primary: #8B5FBF; --tn-theme-secondary: #E9E3F5; --tn-theme-accent: #BFA2DB; --tn-theme-contrast: #5E3A87; --tn-color-text: #000; }
+.tn-theme-aqua    { --tn-theme-primary: #76C9D4; --tn-theme-secondary: #E1F7F9; --tn-theme-accent: #77C8BF; --tn-theme-contrast: #1F5869; --tn-color-text: #000; }
+.tn-theme-forest  { --tn-theme-primary: #8EBF7A; --tn-theme-secondary: #C6DDBF; --tn-theme-accent: #3E6B3F; --tn-theme-contrast: #674A40; --tn-color-text: #000; }
+.tn-theme-orbit   { --tn-theme-primary: #1A1A2E; --tn-theme-secondary: #1F3365; --tn-theme-accent: #EB5B72; --tn-theme-contrast: #971C3C; --tn-color-text: #FFF; }
