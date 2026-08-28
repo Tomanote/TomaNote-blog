@@ -1,0 +1,214 @@
+---
+// Footer.astro — Site footer
+const APP_URL = "https://tomanote.app";
+const DOCS_URL = "https://docs.tomanote.app";
+const GITHUB_URL = "https://github.com/Tomanote/TomaNote";
+
+const locale = Astro.currentLocale || "en";
+const isSpanish = locale === "es";
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer" role="contentinfo">
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="/" class="footer-brand-link" aria-label={isSpanish ? "TomaNote Blog - Inicio" : "TomaNote Blog - Home"}>
+        <svg class="brand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <path d="M17.663 3.118c.225.015.45.032.673.05C19.876 3.298 21 4.604 21 6.109v9.642a3 3 0 0 1-3 3V16.5c0-5.922-4.576-10.775-10.384-11.217.324-1.132 1.3-2.01 2.548-2.114.224-.019.448-.036.673-.051A3 3 0 0 1 13.5 1.5H15a3 3 0 0 1 2.663 1.618ZM12 4.5A1.5 1.5 0 0 1 13.5 3H15a1.5 1.5 0 0 1 1.5 1.5H12Z" />
+          <path d="M3 8.625c0-1.036.84-1.875 1.875-1.875h.375A3.75 3.75 0 0 1 9 10.5v1.875c0 1.036.84 1.875 1.875 1.875h1.875A3.75 3.75 0 0 1 16.5 18v2.625c0 1.035-.84 1.875-1.875 1.875h-9.75A1.875 1.875 0 0 1 3 20.625v-12Z" />
+          <path d="M10.5 10.5a5.23 5.23 0 0 0-1.279-3.434 9.768 9.768 0 0 1 6.963 6.963 5.23 5.23 0 0 0-3.434-1.279h-1.875a.375.375 0 0 1-.375-.375V10.5Z" />
+        </svg>
+        <span>TomaNote Blog</span>
+      </a>
+      <p class="footer-tagline">
+        {isSpanish
+          ? "Artículos, cambios y consejos de productividad minimalista."
+          : "Articles, changelogs, and minimalist productivity tips."}
+      </p>
+    </div>
+
+    <nav class="footer-nav" aria-label={isSpanish ? "Enlaces del pie de página" : "Footer links"}>
+      <div class="footer-section">
+        <h3>{isSpanish ? "Productos" : "Products"}</h3>
+        <ul>
+          <li><a href={APP_URL} target="_blank" rel="noopener noreferrer">TomaNote App</a></li>
+          <li><a href={DOCS_URL} target="_blank" rel="noopener noreferrer">Documentación</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>{isSpanish ? "Comunidad" : "Community"}</h3>
+        <ul>
+          <li><a href={GITHUB_URL} target="_blank" rel="noopener noreferrer">GitHub</a></li>
+          <li><a href={`${GITHUB_URL}/issues`} target="_blank" rel="noopener noreferrer">{isSpanish ? "Reportar issue" : "Report issue"}</a></li>
+          <li><a href={`${GITHUB_URL}/discussions`} target="_blank" rel="noopener noreferrer">{isSpanish ? "Discusiones" : "Discussions"}</a></li>
+        </ul>
+      </div>
+      <div class="footer-section">
+        <h3>{isSpanish ? "Legal" : "Legal"}</h3>
+        <ul>
+          <li><a href={`${APP_URL}/privacy`} target="_blank" rel="noopener noreferrer">{isSpanish ? "Privacidad" : "Privacy"}</a></li>
+          <li><a href={`${APP_URL}/terms`} target="_blank" rel="noopener noreferrer">{isSpanish ? "Términos" : "Terms"}</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <div class="footer-bottom">
+      <p class="copyright">
+        &copy; {year} TomaNote. {isSpanish ? "Todos los derechos reservados." : "All rights reserved."}
+      </p>
+      <p class="built-with">
+        {isSpanish ? "Construido con" : "Built with"} Astro & Tailwind CSS
+      </p>
+    </div>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    background: var(--tn-color-secondary-background);
+    border-top: 1px solid var(--tn-color-accent);
+    margin-top: auto;
+    transition: background 0.3s ease, border-color 0.3s ease;
+  }
+
+  .footer-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 3rem 1.5rem 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    gap: 2rem;
+  }
+
+  .footer-brand {
+    grid-column: 1 / -1;
+    max-width: 320px;
+  }
+
+  .footer-brand-link {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: var(--tn-color-text);
+    font-size: 1.125rem;
+    font-weight: 700;
+  }
+
+  .footer-brand-link:hover {
+    opacity: 0.8;
+  }
+
+  .footer-brand .brand-icon {
+    width: 28px;
+    height: 28px;
+    color: var(--tn-color-accent);
+  }
+
+  .footer-tagline {
+    margin-top: 0.75rem;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    line-height: 1.5;
+  }
+
+  .footer-nav {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 2rem;
+  }
+
+  .footer-section h3 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--tn-color-accent);
+    margin-bottom: 0.75rem;
+  }
+
+  .footer-section ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  .footer-section li {
+    margin-bottom: 0.5rem;
+  }
+
+  .footer-section a {
+    color: var(--tn-color-text);
+    text-decoration: none;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    transition: opacity 0.2s ease, color 0.2s ease;
+  }
+
+  .footer-section a:hover {
+    opacity: 1;
+    color: var(--tn-color-accent);
+  }
+
+  .footer-bottom {
+    grid-column: 1 / -1;
+    padding-top: 2rem;
+    border-top: 1px solid var(--tn-color-accent);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .copyright {
+    margin: 0;
+    font-size: 0.875rem;
+    opacity: 0.6;
+  }
+
+  .built-with {
+    margin: 0;
+    font-size: 0.875rem;
+    opacity: 0.5;
+  }
+
+  /* Responsive */
+  @media (max-width: 768px) {
+    .footer-inner {
+      grid-template-columns: 1fr;
+      padding: 2rem 1rem 1rem;
+    }
+
+    .footer-brand {
+      max-width: none;
+      text-align: center;
+    }
+
+    .footer-brand-link {
+      justify-content: center;
+    }
+
+    .footer-nav {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+      text-align: center;
+    }
+
+    .footer-section h3 {
+      margin-top: 1rem;
+    }
+
+    .footer-bottom {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+
+  @media (min-width: 769px) {
+    .footer-nav {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>
